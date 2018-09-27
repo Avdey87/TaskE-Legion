@@ -1,9 +1,14 @@
 package com.example.avdey.recyclerview;
 
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,10 +21,10 @@ import com.example.avdey.recyclerview.mock.MockGenerator;
 
 import java.util.Random;
 
-public class RecyclerFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class RecyclerFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private RecyclerView recycler;
-    private final MockAdapter mockAdapter = new MockAdapter();
+    private final ContactsAdapter contactsAdapter = new ContactsAdapter();
     private SwipeRefreshLayout swipeRefreshLayout;
     private View errorView;
     private Random random = new Random();
@@ -47,14 +52,14 @@ public class RecyclerFragment extends Fragment implements SwipeRefreshLayout.OnR
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recycler.setAdapter(mockAdapter);
+        recycler.setAdapter(contactsAdapter);
 
     }
 
     @Override
     public void onRefresh() {
 
-        swipeRefreshLayout.postDelayed(new Runnable() {
+       /* swipeRefreshLayout.postDelayed(new Runnable() {
             @Override
             public void run() {
                 int count = random.nextInt(4) ;
@@ -71,11 +76,15 @@ public class RecyclerFragment extends Fragment implements SwipeRefreshLayout.OnR
                 }
             }
         }, 2000);
+*/
+
+        getLoaderManager().restartLoader(0, null, this);
+
 
     }
 
-    
-    private void showData( int count) {
+
+/*    private void showData( int count) {
         mockAdapter.addData(MockGenerator.generate(count), true);
         errorView.setVisibility(View.GONE);
         recycler.setVisibility(View.VISIBLE);
@@ -85,6 +94,31 @@ public class RecyclerFragment extends Fragment implements SwipeRefreshLayout.OnR
     private void showError() {
         errorView.setVisibility(View.VISIBLE);
         recycler.setVisibility(View.GONE);
+
+    }*/
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, @Nullable Bundle bundle) {
+        return new CursorLoader(getActivity(),
+                ContactsContract.Contacts.CONTENT_URI,
+                new String[]{ContactsContract.Contacts._ID, ContactsContract.Contacts.DISPLAY_NAME},
+                null, null, ContactsContract.Contacts._ID
+        );
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+contactsAdapter.swapCursor(data);
+        if (swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+
+
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
     }
 }
