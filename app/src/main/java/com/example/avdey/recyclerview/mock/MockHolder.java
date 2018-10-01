@@ -13,6 +13,7 @@ public class MockHolder extends RecyclerView.ViewHolder {
 
     private TextView name;
     private TextView value;
+    private String id;
 
     public MockHolder( View itemView) {
         super(itemView);
@@ -27,6 +28,7 @@ public class MockHolder extends RecyclerView.ViewHolder {
 
         name.setText(mock.getName());
         value.setText(mock.getValue());
+        id = mock.getValue();
 
     }
 
@@ -34,7 +36,7 @@ public class MockHolder extends RecyclerView.ViewHolder {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onItemClick();
+                listener.onItemClick(id);
             }
         });
     }
