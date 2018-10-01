@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.example.avdey.recyclerview.mock.Mock;
 import com.example.avdey.recyclerview.mock.MockHolder;
@@ -14,7 +15,7 @@ import com.example.avdey.recyclerview.mock.MockHolder;
 public class ContactsAdapter extends RecyclerView.Adapter<MockHolder> {
 
     private Cursor mCursor;
-
+    private OnItemClickListener mListener;
 
     @NonNull
     @Override
@@ -30,6 +31,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<MockHolder> {
             String name = mCursor.getString(mCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
             int id = mCursor.getInt(mCursor.getColumnIndex(ContactsContract.Contacts._ID));
             holder.bind(new Mock(name,id));
+            holder.setListener(mListener);
         }
 
     }
@@ -47,5 +49,14 @@ public class ContactsAdapter extends RecyclerView.Adapter<MockHolder> {
             notifyDataSetChanged();
         }
 
+    }
+
+    public void setListener(OnItemClickListener listener) {
+        mListener =  listener;
+    }
+
+
+    public interface OnItemClickListener {
+        void onItemClick();
     }
 }

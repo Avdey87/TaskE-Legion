@@ -3,8 +3,10 @@ package com.example.avdey.recyclerview.mock;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
+import com.example.avdey.recyclerview.ContactsAdapter;
 import com.example.avdey.recyclerview.R;
 
 public class MockHolder extends RecyclerView.ViewHolder {
@@ -26,5 +28,14 @@ public class MockHolder extends RecyclerView.ViewHolder {
         name.setText(mock.getName());
         value.setText(mock.getValue());
 
+    }
+
+    public void setListener(final ContactsAdapter.OnItemClickListener listener) {
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onItemClick();
+            }
+        });
     }
 }
