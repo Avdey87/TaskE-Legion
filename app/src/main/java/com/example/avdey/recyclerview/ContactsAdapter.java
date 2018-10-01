@@ -2,12 +2,11 @@ package com.example.avdey.recyclerview;
 
 import android.database.Cursor;
 import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+
 
 import com.example.avdey.recyclerview.mock.Mock;
 import com.example.avdey.recyclerview.mock.MockHolder;
@@ -17,16 +16,16 @@ public class ContactsAdapter extends RecyclerView.Adapter<MockHolder> {
     private Cursor mCursor;
     private OnItemClickListener mListener;
 
-    @NonNull
+
     @Override
-    public MockHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MockHolder onCreateViewHolder( ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.li_mock, parent, false);
         return new MockHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MockHolder holder, int position) {
+    public void onBindViewHolder( MockHolder holder, int position) {
         if (mCursor.moveToPosition(position)) {
             String name = mCursor.getString(mCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
             int id = mCursor.getInt(mCursor.getColumnIndex(ContactsContract.Contacts._ID));
